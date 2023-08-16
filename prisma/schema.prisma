@@ -8,16 +8,41 @@ datasource db {
   relationMode = "prisma"
 }
 
-model Player {
-  id         String   @id
-  firstname  String
-  lastname   String
-  goal       Int?
-  salary     Int?
-  devise     String?
-  pictureURL String?  @db.Text
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime
+model Organisation {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  createAt  DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  users     User[]
+  tasks     Task[]
+}
 
-  @@unique([firstname, lastname])
+model User {
+  id        String        @id @default(cuid())
+  email     String        @unique
+  name      String?
+  image     String?
+  createAt  DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  org       Organisation? @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  orgId     String?
+  tasks     Task[]
+
+  @@index([orgId])
+}
+
+model Task {
+  id        String       @id @default(cuid())
+  name      String?
+  startAt   DateTime?
+  endAt     DateTime?
+  createAt  DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  user      User?        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String?
+  org       Organisation @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  orgId     String
+
+  @@index([userId])
+  @@index([orgId])
 }
