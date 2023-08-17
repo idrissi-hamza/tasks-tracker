@@ -1,0 +1,38 @@
+import { getUserSession } from "@/lib/auth";
+import Link from "next/link";
+import { Avatar, AvatarImage } from "./ui/avatar";
+
+const links = [{ href: "/track", label: "Track" }];
+
+export async function NavBar() {
+  const user = await getUserSession();
+  return (
+    <div className="shadow">
+      <div className="container mx-auto flex items-center space-x-4 py-2">
+        <Link href="/" className="rounded px-2 py-1 hover:bg-slate-100">
+          <span className="font-semibold">Time Tracker</span>
+        </Link>
+        <nav>
+          <ul>
+            {links.map(({ href, label }) => (
+              <li key={href}>
+                <Link
+                  className="rounded px-2 py-1 text-blue-500 hover:bg-slate-100 hover:text-blue-600"
+                  href={href}
+                >
+                  {label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+        <span className="flex-grow" />
+        <div>
+          <Avatar>
+            <AvatarImage src={user.image} referrerPolicy="no-referrer" />
+          </Avatar>
+        </div>
+      </div>
+    </div>
+  );
+}
