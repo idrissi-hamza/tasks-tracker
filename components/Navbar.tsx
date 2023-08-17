@@ -1,6 +1,7 @@
 import { getUserSession } from "@/lib/auth";
 import Link from "next/link";
 import { Avatar, AvatarImage } from "./ui/avatar";
+import Logo from "./Logo";
 
 const links = [{ href: "/track", label: "Track" }];
 
@@ -9,9 +10,7 @@ export async function NavBar() {
   return (
     <div className="shadow">
       <div className="container mx-auto flex items-center space-x-4 py-2">
-        <Link href="/" className="rounded px-2 py-1 hover:bg-slate-100">
-          <span className="font-semibold">Time Tracker</span>
-        </Link>
+        <Logo />
         <nav>
           <ul>
             {links.map(({ href, label }) => (
