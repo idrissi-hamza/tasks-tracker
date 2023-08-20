@@ -1,6 +1,7 @@
 import type { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import prisma from "./prisma";
+import { session } from "./auth";
 
 export const authOptions: NextAuthOptions = {
   session: {
@@ -35,6 +36,25 @@ export const authOptions: NextAuthOptions = {
         },
       });
       return true;
+    },
+    session,
+    async jwt({ token, user, account, profile }) {
+      console.log(token, account, profile, user);
+      if (profile) {
+        const user = await prisma.user.findUnique({
+          where: {
+            email: profile.email,
+          },
+        });
+        if (!user) {
+          throw new Error("no User");
+        }
+        token.userId = user.id;
+        token.org = {
+          orgd: user.orgId,
+        };
+      }
+      return token;
     },
   },
 };
