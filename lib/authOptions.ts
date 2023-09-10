@@ -39,7 +39,13 @@ export const authOptions: NextAuthOptions = {
     },
     session,
     async jwt({ token, user, account, profile }) {
-      console.log(token, account, profile, user);
+      console.log(
+        "token before ****************",
+        token,
+        account,
+        profile,
+        user,
+      );
       if (profile) {
         const user = await prisma.user.findUnique({
           where: {
@@ -51,7 +57,7 @@ export const authOptions: NextAuthOptions = {
         }
         token.userId = user.id;
         token.org = {
-          orgd: user.orgId,
+          orgId: user.orgId,
         };
       }
       return token;
